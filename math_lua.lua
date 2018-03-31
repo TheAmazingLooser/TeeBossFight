@@ -1,0 +1,1 @@
+length = function(a) return math.sqrt(a.x*a.x + a.y*a.y); end
