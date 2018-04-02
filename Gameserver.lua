@@ -25,12 +25,35 @@ local function HandleCommand(cmd,prm)
                 Answer("Successfully logged in!\nWelcome back '"..Usr.."'!")
                 Srv.Game:GetPlayer(CID):GetSelf().IsLoggedIn = true
                 Srv.Game:GetPlayer(CID):GetSelf().LoggedUsername = Usr
+                LoadData(CID)
             end
         else
             Answer("Too less info given! Be sure you wrote: /login USER PASS")
         end
-    else
-
+    elseif cmd == "register" then
+        if Srv.Game:GetPlayer(CID):GetSelf().IsLoggedIn then
+            Answer("You are already logged in as '"..Srv.Game:GetPlayer(CID):GetSelf().LoggedUsername.."'!")
+            return
+        end
+        if #prm >= 2 then
+            local Usr = prm[1]
+            local Pas = prm[2]
+            -- No matter how much params we got, use only 1st 2 params!
+            local x = LuaAccount.Register(Usr,Pas)
+            if x == -1 then
+                Answer("Can't create that account. (Ask an admin for help!)")
+                return
+            elseif x == 2 then -- Wrong username, password or not existent!
+                Answer("Whoooops! This username is already in use :/")
+            else
+                Answer("Successfully registered.\nWelcome '"..Usr.."' to TeeBossFight!")
+                Srv.Game:GetPlayer(CID):GetSelf().IsLoggedIn = true
+                Srv.Game:GetPlayer(CID):GetSelf().LoggedUsername = Usr
+                LoadData(CID)
+            end
+        else
+            Answer("Too less info given! Be sure you wrote: /register USER PASS")
+        end
     end
 end
 

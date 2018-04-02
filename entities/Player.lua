@@ -25,6 +25,7 @@ end
 
 function Player.OnDisconnect(Reason)
 	print(Srv.Server:GetClientName(this:GetCID()) .." disconnected with reason " .. Reason)
+	SaveData(this:GetCID())
 end
 
 local function ConnectPlayer(this)
@@ -43,7 +44,7 @@ end
 function LoadData(CID)
 	if Srv.Game:GetPlayer(CID):GetSelf().IsLoggedIn == false then return false end
 	if LuaAccount.GetAccountFile(CID)~= nil then
-		dofile(LuaAccount.GetAccountFile(CID))
+		dofile(Srv.Storage:GetFullPath(LuaAccount.GetAccountFile(CID)))
 		if data ~= nil then
 			Srv.Game:GetPlayer(CID):GetSelf().Data = data
 			return true
@@ -59,8 +60,12 @@ function SaveData(CID)
 	return LuaAccount.SaveData(Srv.Game:GetPlayer(CID):GetSelf().LoggedUsername,Srv.Game:GetPlayer(CID):GetSelf().Data)
 end
 
-function AddInventory(this,weapon,stats)
+function PlayerAddWeapon(CID,Weap,Stats,Rarity)
+	AddInventory(Srv.Game:GetPlayer(CID),Weap,Stats,Rarity)
+end
 
+function AddInventory(this,weapon,stats,rarity)
+	table.insert(this:GetSelf().Data.Inventory,{Weapon = weapon,Stats = stats,Rarity = rarity})
 end
 
 --[[

@@ -18,8 +18,6 @@ local Helps = {
 
 math.randomseed(os.time())
 
-Srv.Console:ExecuteLine("dbg_dummies 1",-1) -- Prepare for BATLLE
-
 Srv.Console:Register("help", "s", "Shows a detailed info about the command.", function(result)
     local Cmd = result:GetString(0):lower()
     local CID = result:GetCID()
